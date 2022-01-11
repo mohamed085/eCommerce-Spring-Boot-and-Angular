@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @RepositoryRestResource(collectionResourceRel = "productCategory", path = "product-category")
 @CrossOrigin
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, Long> {
+    
 }
