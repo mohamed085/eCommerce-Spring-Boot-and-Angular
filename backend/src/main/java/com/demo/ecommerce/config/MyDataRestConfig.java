@@ -22,7 +22,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     private EntityManager entityManager;
 
     @Autowired
-    private MyDataRestConfig(EntityManager entityManager) {
+    public MyDataRestConfig(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -44,10 +44,10 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
                 .withCollectionExposure((metdata, httpMethods) -> httpMethods.disable(theUnsupportedActions));
 
 
-        exposeId(config);
+        exposeIds(config);
     }
 
-    private void exposeId(RepositoryRestConfiguration config) {
+    private void exposeIds(RepositoryRestConfiguration config) {
 
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
 
