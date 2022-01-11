@@ -12,9 +12,11 @@ import {ActivatedRoute} from "@angular/router";
 export class ProductListComponent implements OnInit {
 
   // @ts-ignore
-  products: Product[]
+  products: Product[];
   // @ts-ignore
-  currentCategoryId: number
+  currentCategoryId: number;
+  // @ts-ignore
+  searchMode: boolean;
 
   constructor(private productService: ProductService,
               private route: ActivatedRoute) { }
@@ -26,6 +28,24 @@ export class ProductListComponent implements OnInit {
   }
 
   listProducts() {
+    this.searchMode = this.route.snapshot.paramMap.has('keyword');
+
+    if (this.searchMode) this.handleSearchListProducts();
+    else this.handleListProducts();
+  }
+
+  handleSearchListProducts() {
+    // @ts-ignore
+    const keyword: string = this.route.snapshot.paramMap.get("keyword");
+
+    this.productService.searchProductList(keyword).subscribe(
+      data => {
+        this.products = data
+      }
+    )  }
+
+  handleListProducts() {
+
     const hasCategoryId: boolean = this.route.snapshot.paramMap.has('id');
 
     if (hasCategoryId) {
@@ -40,6 +60,7 @@ export class ProductListComponent implements OnInit {
         this.products = data
       }
     )
+
   }
 
 }
