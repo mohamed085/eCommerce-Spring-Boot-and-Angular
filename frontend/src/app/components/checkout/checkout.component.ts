@@ -62,17 +62,16 @@ export class CheckoutComponent implements OnInit {
 
     const startMonth: number = new Date().getMonth() + 1;
     this.luv2ShopFormService.getCreditCardMonths(startMonth).subscribe(
-      data => {
-        this.creditCardMonths = data;
-      }
+      data => this.creditCardMonths = data
     );
 
     this.luv2ShopFormService.getCreditCardYears().subscribe(
-      data => {
-        this.creditCardYears = data;
-      }
+      data => this.creditCardYears = data
     );
 
+    this.luv2ShopFormService.getCountries().subscribe(
+      data => this.countries = data
+    )
 
   }
 
@@ -86,6 +85,8 @@ export class CheckoutComponent implements OnInit {
       // @ts-ignore
       this.checkoutFormGroup.controls.billingAddress
         .setValue(this.checkoutFormGroup.controls['shippingAddress'].value)
+
+      this.billingAddressStates = this.shippingAddressStates;
     } else {
       // @ts-ignore
       this.checkoutFormGroup.controls.billingAddress.reset();
@@ -107,6 +108,24 @@ export class CheckoutComponent implements OnInit {
     this.luv2ShopFormService.getCreditCardMonths(startMonth).subscribe(
       data => this.creditCardMonths = data
     )
+
+  }
+
+  getStates(forGroupName: string) {
+    const formGroup = this.checkoutFormGroup.get(forGroupName);
+
+    const countryCode = formGroup?.value.country.code;
+    const countryName = formGroup?.value.country.name;
+
+    this.luv2ShopFormService.getStatesByCountryCode(countryCode).subscribe(
+      data => {
+        if (forGroupName === 'billingAddress') this.billingAddressStates = data
+        else if (forGroupName === 'shippingAddress') this.shippingAddressStates = data
+
+        formGroup?.get('state')?.setValue(data[0]);
+      }
+    );
+
 
   }
 }
