@@ -11,12 +11,15 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class ProductListComponent implements OnInit {
 
-  // @ts-ignore
-  products: Product[];
-  // @ts-ignore
-  currentCategoryId: number;
-  // @ts-ignore
-  searchMode: boolean;
+  products: Product[] = [];
+  previousCategoryId: number = 1;
+  currentCategoryId: number = 1;
+  searchMode: boolean = false;
+
+  pageNumber: number = 1;
+  pageSize: number = 8;
+  totalElements: number = 0;
+  totalPages: number = 1;
 
   constructor(private productService: ProductService,
               private route: ActivatedRoute) { }
@@ -55,11 +58,34 @@ export class ProductListComponent implements OnInit {
       this.currentCategoryId = 1;
     }
 
-    this.productService.getProductList(this.currentCategoryId).subscribe(
-      data => {
-        this.products = data
-      }
-    )
+    if (this.previousCategoryId != this.currentCategoryId) {
+      this.pageNumber = 1
+    }
+
+    this.previousCategoryId = this.currentCategoryId
+
+    this.productService.getProductListPaginate(this.pageNumber - 1, this.pageSize,
+      this.currentCategoryId).subscribe(this.processResult())
+  }
+
+  processResult() {
+    // @ts-ignore
+    return data => {
+      this.products = data._embedded.products;
+      this.pageSize = data.page.size;
+      this.pageNumber = data.page.number + 1;
+      this.totalElements = data.page.totalElements;
+      this.totalPages = data.page.totalPages
+    }
+
+  }
+
+  // @ts-ignore
+  updatePageSize($event) {
+    let pageSize: number = $event.target.value
+    this.pageSize = pageSize;
+    this.pageNumber = 1;
+    this.listProducts();
 
   }
 

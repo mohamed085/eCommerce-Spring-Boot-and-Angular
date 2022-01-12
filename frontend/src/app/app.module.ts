@@ -11,6 +11,7 @@ import { ProductService } from "./services/product.service";
 
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule, Routes } from "@angular/router";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   { path: 'search/:keyword', component: ProductListComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
     ProductDetailsComponent
   ],
   imports: [
+    NgbModule,
     RouterModule.forRoot(routes),
     BrowserModule,
     HttpClientModule
