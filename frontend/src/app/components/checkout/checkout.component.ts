@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import {Country} from "../../common/country";
 import {State} from "../../common/state";
 import {Luv2ShopFormService} from "../../services/luv2-shop-form.service";
+import { CartService } from "../../services/cart.service";
 
 @Component({
   selector: 'app-checkout',
@@ -14,7 +15,7 @@ export class CheckoutComponent implements OnInit {
   // @ts-ignore
   checkoutFormGroup: FormGroup;
 
-  totalPrice: number = 0;
+  totalPrice: number = 0.0;
   totalQuantity: number = 0;
 
   creditCardYears: number[] = [];
@@ -25,9 +26,9 @@ export class CheckoutComponent implements OnInit {
   shippingAddressStates: State[] = [];
   billingAddressStates: State[] = [];
 
-
   constructor(private luv2ShopFormService: Luv2ShopFormService,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private cartService: CartService) { }
 
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
@@ -60,22 +61,27 @@ export class CheckoutComponent implements OnInit {
       })
     });
 
+    this.getCartDetails();
+
     const startMonth: number = new Date().getMonth() + 1;
-    this.luv2ShopFormService.getCreditCardMonths(startMonth).subscribe(
-      data => this.creditCardMonths = data
-    );
 
-    this.luv2ShopFormService.getCreditCardYears().subscribe(
-      data => this.creditCardYears = data
-    );
+    this.luv2ShopFormService.getCreditCardMonths(startMonth).subscribe(data => this.creditCardMonths = data);
 
-    this.luv2ShopFormService.getCountries().subscribe(
-      data => this.countries = data
-    )
+    this.luv2ShopFormService.getCreditCardYears().subscribe(data => this.creditCardYears = data);
+
+    this.luv2ShopFormService.getCountries().subscribe(data => this.countries = data);
 
   }
 
   onSubmit() {
+
+  }
+
+  getCartDetails() {
+
+    this.cartService.totalPrice.subscribe(data => this.totalPrice = data);
+
+    this.cartService.totalQuantity.subscribe(data => this.totalQuantity = data);
 
   }
 
@@ -85,7 +91,6 @@ export class CheckoutComponent implements OnInit {
       // @ts-ignore
       this.checkoutFormGroup.controls.billingAddress
         .setValue(this.checkoutFormGroup.controls['shippingAddress'].value)
-
       this.billingAddressStates = this.shippingAddressStates;
     } else {
       // @ts-ignore
@@ -128,4 +133,5 @@ export class CheckoutComponent implements OnInit {
 
 
   }
+
 }
