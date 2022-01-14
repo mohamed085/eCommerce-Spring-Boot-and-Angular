@@ -1,9 +1,6 @@
 package com.demo.ecommerce.config;
 
-import com.demo.ecommerce.entity.Country;
-import com.demo.ecommerce.entity.Product;
-import com.demo.ecommerce.entity.ProductCategory;
-import com.demo.ecommerce.entity.State;
+import com.demo.ecommerce.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -19,12 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 @Configuration
-public class MyDataRestConfig implements RepositoryRestConfigurer {
+public class DataRestConfig implements RepositoryRestConfigurer {
 
     private EntityManager entityManager;
 
     @Autowired
-    public MyDataRestConfig(EntityManager entityManager) {
+    public DataRestConfig(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

@@ -6,9 +6,9 @@ import { Luv2ShopFormService } from "../../services/luv2-shop-form.service";
 import { CartService } from "../../services/cart.service";
 import { Purchase } from "../../common/purchase";
 import { Router } from "@angular/router";
-import {Order} from "../../common/order";
-import {OrderItem} from "../../common/order-item";
-import {CheckoutService} from "../../services/checkout.service";
+import { Order } from "../../common/order";
+import { OrderItem } from "../../common/order-item";
+import { CheckoutService } from "../../services/checkout.service";
 
 @Component({
   selector: 'app-checkout',
